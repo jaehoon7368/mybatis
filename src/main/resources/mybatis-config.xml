@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties resource="/datasource.properties" />
+	
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+	
+	<typeAliases>
+		<typeAlias type="com.sh.mybatis.student.model.dto.Student" alias="student"/>
+		<package name="com.sh.mybatis"/><!-- 지정한 패키지 하위의 모든 클래스를 소문자로 시갖하는 별칭으로 등록 -->
+	</typeAliases>
+	
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC"/><!-- JDBC(개발코드로 직접 제어) | MANAGER(컨테이너에 톰캣에 트랜잭션위임) -->
+      <dataSource type="POOLED"><!-- POOLED 톰캣 커넥션풀 관리 -->
+        <property name="driver" value="${driverClass}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${user}"/>
+        <property name="password" value="${password}"/>
+      </dataSource>
+    </environment>
+  </environments>
+  <mappers>
+    <mapper resource="/sql/student/student-mapper.xml"/>
+    <mapper resource="/sql/emp/emp-mapper.xml"/>
+  </mappers>
+</configuration>

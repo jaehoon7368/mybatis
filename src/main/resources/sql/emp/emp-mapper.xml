@@ -49,7 +49,7 @@
 		    and
 		    	${searchType} like '%' || #{searchKeyword} ||'%'		    
 		    </if>
-		    <if test="gender != null">
+		    <if test="gender neq null">
 		    and
 		    	gender = #{gender}		    
 		    </if>
@@ -77,6 +77,92 @@
 		    	</choose>
 		    </if>
 	</select>
+	
+	<select  id="selectJobList" resultMap="jobMap">
+		select
+			*
+		from
+			job
+	</select>
+	<resultMap type="map" id="jobMap">
+		<id column="job_code" property="jobCode" />
+		<result column="job_name" property="jobName" />
+	</resultMap>
+	
+	
+	<!-- 
+		foreach
+		- collection 반복접근 가능한 객체 : 배열,list.set,...
+		- item 요소하나를 담을 변수명
+		- open : 맨처음만 출력
+		- close : 맨마지막만 출력
+		- separator : 구분자
+	 -->
+	<select id="search3" resultMap="empMap">
+		select
+			e.*,
+			(select job_name from job where job_code = e.job_code) job_name,
+			(select dept_title from dept where dept_id = e.dept_code) dept_title
+		from
+			emp e
+		<where>
+			<if test="jobCodes != null">
+			job_code in
+				<foreach collection="jobCodes" item="jobCode" open="(" close=")" separator=",">
+					#{jobCode}
+				</foreach>			
+			</if>
+			<if test="deptCodes != null">
+			and nvl(dept_code,'D0') in
+				<foreach collection="deptCodes" item="deptCode" open="(" close=")" separator=",">
+					#{deptCode}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	
+	<select  id="selectDeptList" resultMap="deptMap">
+		select
+			*
+		from
+			dept
+	</select>
+	<resultMap id="deptMap" type="map">
+		<id column="dept_id" property="deptId" />
+		<result column="dept_title" property="deptTitle" />
+		<result column="location_id" property="locationId" />
+	</resultMap>
+	
+	<select id="selectOneEmp" resultMap="empMap">
+		select
+			*
+		from
+			emp e left join dept d
+				on e.dept_code = d.dept_id
+			join job j
+				on e.job_code = j.job_code
+		where
+			emp_id = #{empId}
+	</select>
+	
+	<!-- 
+		set
+			- set태그 안의 마지막 콤마를 제거해줌.
+	 -->
+	<update id="updateEmp">
+		update
+			emp
+		<set>
+			<if test="jobCode neq null and jobCode neq ''">
+				job_code = #{jobCode},
+			</if>
+			<if test="deptCode neq null and deptCode neq ''">
+				dept_code = #{deptCode}
+			</if>
+		</set>
+		where
+			emp_id = #{empId}
+	</update>
 		
 		
 		
@@ -88,7 +174,9 @@
 		<result column="EMAIL" property="email" />
 		<result column="PHONE" property="phone" />
 		<result column="DEPT_CODE" property="deptCode" />
+		<result column="dept_title" property="deptTitle" />
 		<result column="JOB_CODE" property="jobCode" />
+		<result column="job_name" property="jobName" />
 		<result column="SAL_LEVEL" property="salLevel" />
 		<result column="SALARY" property="salary" />
 		<result column="BONUS" property="bonus" />

@@ -35,8 +35,9 @@
 	
 	<h3>emp</h3>
 	<ul>
-		<li><a href="${pageContext.request.contextPath}/emp/seatch1.do">동적쿼리</a></li>
-		<li><a href="${pageContext.request.contextPath}/emp/seatch2.do">if</a></li>
+		<li><a href="${pageContext.request.contextPath}/emp/search1.do">동적쿼리</a></li>
+		<li><a href="${pageContext.request.contextPath}/emp/search2.do">if</a></li>
+		<li><a href="${pageContext.request.contextPath}/emp/search3.do">foreach</a></li>
 	</ul>
 </body>
 </html>

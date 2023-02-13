@@ -102,5 +102,21 @@ where
     emp_name like '%이%'
     and
     gender = '남';
+    
+select
+			e.*,
+			(select job_name from job where job_code = e.job_code) job_name,
+			nvl((select dept_title from dept where dept_id = e.dept_code),'인턴') dept_title
+		from
+			emp e;
+select * from dept;
+
+select
+			*
+		from
+			emp e left join dept d
+				on e.dept_code = d.dept_id
+			join job j
+				on e.job_code = j.job_code
 
 
